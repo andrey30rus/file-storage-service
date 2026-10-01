@@ -1,0 +1,13 @@
+# Prod-like режим: наружу публикуется только frontend (nginx).
+# Запуск: make up-prod  (или docker compose -f docker-compose.yml -f docker-compose.prod.yml ... up -d)
+# Остальные сервисы доступны только внутри сети cloud-storage.
+
+services:
+  postgres:
+    ports: !reset []
+  redis:
+    ports: !reset []
+  minio:
+    ports: !reset []
+  backend:
+    ports: !reset []
