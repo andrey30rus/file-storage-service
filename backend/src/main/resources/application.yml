@@ -1,28 +1,28 @@
 minio:
-    access-key: ${MINIO_ACCESS_KEY:minioadmin}
-    bucket: ${MINIO_BUCKET:user-files}
-    secret-key: ${MINIO_SECRET_KEY:minioadmin}
-    url: ${MINIO_URL:http://localhost:9000}
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  bucket: ${MINIO_BUCKET:user-files}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  url: ${MINIO_URL:http://localhost:9000}
 server:
-    port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:8080}
 spring:
-    application:
-        name: file-repository-service
-    config:
-        import: "optional:file:.env[.properties]"
-    data:
-        redis:
-            host: ${REDIS_HOST:localhost}
-            port: ${REDIS_PORT:6379}
-    datasource:
-        password: ${DB_PASSWORD:files}
-        url: ${DB_URL:jdbc:postgresql://localhost:5432/files}
-        username: ${DB_USERNAME:files}
-    jpa:
-        hibernate:
-            ddl-auto: validate
-        open-in-view: false
-    servlet:
-        multipart:
-            max-file-size: ${MAX_FILE_SIZE:1024MB}
-            max-request-size: ${MAX_REQUEST_SIZE:1024MB}
+  application:
+    name: file-storage-service
+  config:
+    import: "optional:file:.env[.properties]"
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  datasource:
+    password: ${DB_PASSWORD:files}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/files}
+    username: ${DB_USERNAME:files}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:1024MB}
+      max-request-size: ${MAX_REQUEST_SIZE:1024MB}
