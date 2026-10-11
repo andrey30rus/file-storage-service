@@ -3,6 +3,7 @@ package com.storage.filestorageservice.config;
 import com.storage.filestorageservice.auth.security.JsonAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,19 +22,22 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http,
                                             JsonAuthenticationEntryPoint entryPoint,
                                             SecurityContextRepository securityContextRepository
-                                            ) throws Exception {
-        http
+    ) {
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .securityContext(c -> c.securityContextRepository(securityContextRepository))
+                .exceptionHandling(e -> e.authenticationEntryPoint(entryPoint))
+                .authorizeHttpRequests(a -> a
+                        .requestMatchers(HttpMethod.POST, "/api/auth/sign-up", "/api/auth/sign-in").permitAll()
+                        .requestMatchers("/", "/index.html", "/favicon.ico", "/config.js", "/assets/**", "/*.js", "/*.css").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/health/**").permitAll()
                         .anyRequest().authenticated())
-                .securityContext(context -> context
-                        .securityContextRepository(securityContextRepository))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(entryPoint));
-        return http.build();
+                .build();
     }
 
     @Bean
@@ -42,7 +46,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityContextRepository securityContextRepository(){
+    SecurityContextRepository securityContextRepository() {
         return new HttpSessionSecurityContextRepository();
     }
 
