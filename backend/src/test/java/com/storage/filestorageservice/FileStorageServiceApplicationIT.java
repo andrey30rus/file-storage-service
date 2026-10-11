@@ -1,10 +1,10 @@
-package com.repository.filerepositoryservice;
+package com.storage.filestorageservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FileRepositoryServiceApplicationTests {
+class FileStorageServiceApplicationIT {
 
     @Test
     void contextLoads() {

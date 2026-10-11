@@ -31,7 +31,7 @@ endif
 
 help: ## Show this help
 	@echo -e "$(GREEN)Cloud Storage — доступные команды:$(NC)"
-	@grep -E '^[a-zA-Z_-]+:.*##' $(MAKEFILE_LIST) | sort | \
+	@grep -h -E '^[a-zA-Z_-]+:.*##' $(MAKEFILE_LIST) | sort | \
 		awk -F'##' '{cmd=$$1; sub(/:.*/, "", cmd); gsub(/^ +| +$$/, "", $$2); printf "  $(BLUE)%-20s$(NC) %s\n", cmd, $$2}'
 
 init: ## Create .env from .env.example
@@ -88,8 +88,8 @@ backend-run: ## Run backend locally via mvnw (uses backend/.env if present)
 backend-build: ## Build backend jar
 	@cd backend && ./mvnw -DskipTests package
 
-backend-test: ## Run backend tests
-	@cd backend && ./mvnw test
+backend-test: ## Run backend tests (unit + IT)
+	@cd backend && ./mvnw verify
 
 # ----------------------------------------------------------------------------
 # Frontend (local run: make frontend-dev)
