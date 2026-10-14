@@ -1,10 +1,10 @@
-minio:
-  access-key: ${MINIO_ACCESS_KEY:minioadmin}
-  bucket: ${MINIO_BUCKET:user-files}
-  secret-key: ${MINIO_SECRET_KEY:minioadmin}
-  url: ${MINIO_URL:http://localhost:9000}
 server:
   port: ${SERVER_PORT:8080}
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        same-site: lax
 spring:
   application:
     name: file-storage-service
@@ -14,6 +14,8 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+  session:
+    timeout: 30m
   datasource:
     password: ${DB_PASSWORD:files}
     url: ${DB_URL:jdbc:postgresql://localhost:5432/files}
@@ -24,5 +26,10 @@ spring:
     open-in-view: false
   servlet:
     multipart:
-      max-file-size: ${MAX_FILE_SIZE:1024MB}
-      max-request-size: ${MAX_REQUEST_SIZE:1024MB}
+      max-file-size: ${MAX_FILE_SIZE:500MB}
+      max-request-size: ${MAX_REQUEST_SIZE:1GB}
+minio:
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  bucket: ${MINIO_BUCKET:user-files}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  url: ${MINIO_URL:http://localhost:9000}
