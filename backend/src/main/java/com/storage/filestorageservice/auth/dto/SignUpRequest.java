@@ -4,11 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record SignUpRequest(
-        @NotBlank(message = "Username is required")
-        @Size(min = 5, max = 20, message = "Username must be between 8 and 50 characters")
+        @NotBlank(message = "Имя пользователя обязательно")
+        @Size(min = 5, max = 20, message = "Имя пользователя должно содержать от 5 до 20 символов")
         String username,
-        @NotBlank(message = "Password is required")
-        @Size(min = 8, message = "Password must be at least 8 characters") String password
+        @NotBlank(message = "Пароль обязателен")
+        @Size(min = 8, message = "Пароль должен содержать не менее 8 символов") String password
 ) {
 
 }
