@@ -25,7 +25,7 @@ public class AuthService {
     @Transactional
     public Authentication register(SignUpRequest request) throws UsernameAlreadyExistsException {
         if (userRepository.existsByUsername(request.username())) {
-            throw new UsernameAlreadyExistsException("Username already exists");
+            throw new UsernameAlreadyExistsException("Имя пользователя занято");
         }
         User savedUser;
         try {
