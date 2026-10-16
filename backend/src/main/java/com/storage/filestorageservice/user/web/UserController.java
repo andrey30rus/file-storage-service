@@ -1,6 +1,5 @@
 package com.storage.filestorageservice.user.web;
 
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +9,7 @@ import com.storage.filestorageservice.auth.security.CurrentUser;
 import com.storage.filestorageservice.auth.security.SecurityUser;
 import com.storage.filestorageservice.error.ErrorResponse;
 import com.storage.filestorageservice.user.dto.UserResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
