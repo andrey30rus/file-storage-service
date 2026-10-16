@@ -1,6 +1,5 @@
 package com.storage.filestorageservice.auth.web;
 
-import com.storage.filestorageservice.auth.dto.SignInRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import com.storage.filestorageservice.auth.dto.SignInRequest;
 import com.storage.filestorageservice.auth.dto.SignUpRequest;
 import com.storage.filestorageservice.auth.service.AuthService;
 import com.storage.filestorageservice.auth.service.SessionLogin;
@@ -67,6 +67,17 @@ public class AuthController {
         Authentication authentication = authenticationService.authenticate(signInRequest.username(), signInRequest.password());
         sessionLogin.login(authentication, request, response);
         return new UserResponse(authentication.getName());
+    }
+
+    @PostMapping("/sign-out")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Выход")
+    @ApiResponse(responseCode = "204", description = "Выход выполнен, сессия закрыта")
+    @ApiResponse(responseCode = "401", description = "Пользователь не авторизован",
+                 content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    public void signOut(HttpServletRequest request) {
+
+        sessionLogin.logout(request);
     }
 
 }

@@ -96,4 +96,41 @@ class AuthControllerIT extends AbstractIntegrationTests {
                 .expectBody().jsonPath("$.message").isNotEmpty();
     }
 
+    @Test
+    void signOut_shouldInvalidateSession() {
+        EntityExchangeResult<String> signUp = rest.post().uri("/api/auth/sign-up")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new SignUpRequest("user_1", "password"))
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(String.class)
+                .returnResult();
+
+        String[] sessionCookie = signUp.getResponseHeaders().getFirst(HttpHeaders.SET_COOKIE)
+                .split(";")[0].split("=", 2);
+
+        rest.get().uri("/api/user/me")
+                .cookie(sessionCookie[0], sessionCookie[1])
+                .exchange()
+                .expectStatus().isOk();
+
+        rest.post().uri("/api/auth/sign-out")
+                .cookie(sessionCookie[0], sessionCookie[1])
+                .exchange()
+                .expectStatus().isNoContent()
+                .expectHeader().valueMatches(HttpHeaders.SET_COOKIE, "SESSION=;.*Max-Age=0.*");
+
+        rest.get().uri("/api/user/me")
+                .cookie(sessionCookie[0], sessionCookie[1])
+                .exchange()
+                .expectStatus().isUnauthorized();
+    }
+
+    @Test
+    void signOut_withoutSession_shouldReturnUnauthorized() {
+        rest.post().uri("/api/auth/sign-out")
+                .exchange()
+                .expectStatus().isUnauthorized();
+    }
+
 }
