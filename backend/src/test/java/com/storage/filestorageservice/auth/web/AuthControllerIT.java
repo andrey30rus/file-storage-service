@@ -86,4 +86,14 @@ class AuthControllerIT extends AbstractIntegrationTests {
                 .expectBody().jsonPath("$.message").isEqualTo("Неверное имя пользователя или пароль");
     }
 
+    @Test
+    void signIn_withBlankFields_shouldReturnBadRequest() {
+        rest.post().uri("/api/auth/sign-in")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new SignInRequest("", ""))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody().jsonPath("$.message").isNotEmpty();
+    }
+
 }
