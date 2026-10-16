@@ -1,5 +1,6 @@
 package com.storage.filestorageservice.auth.web;
 
+import com.storage.filestorageservice.auth.dto.SignInRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,12 +26,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-@Tag(name = "Authentication Controller", description = "API for working with Authentication")
+@Tag(name = "Authentication", description = "Регистрация, вход и выход")
 @ApiResponse(responseCode = "500", description = "Неизвестная ошибка",
              content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
 public class AuthController {
 
     private final AuthService authenticationService;
+
     private final SessionLogin sessionLogin;
 
     @PostMapping("/sign-up")
@@ -46,6 +48,23 @@ public class AuthController {
                                HttpServletResponse response) {
 
         Authentication authentication = authenticationService.register(signUpRequest);
+        sessionLogin.login(authentication, request, response);
+        return new UserResponse(authentication.getName());
+    }
+
+    @PostMapping("/sign-in")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Вход")
+    @ApiResponse(responseCode = "200", description = "Вход выполнен, сессия открыта")
+    @ApiResponse(responseCode = "400", description = "Ошибка валидации",
+                 content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @ApiResponse(responseCode = "401", description = "Неверные данные",
+                 content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    public UserResponse signIn(@RequestBody @Valid SignInRequest signInRequest,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+        Authentication authentication = authenticationService.authenticate(signInRequest.username(), signInRequest.password());
         sessionLogin.login(authentication, request, response);
         return new UserResponse(authentication.getName());
     }
